@@ -145,8 +145,7 @@
 // Simple mixin for activated states which automatically selects opacity values based on whether the ink color is
 // light or dark.
 @mixin mdc-states-activated($color, $has-nested-focusable-element: false) {
-  $opacity-map: mdc-states-opacities_($color);
-  $activated-opacity: map-get($opacity-map, "activated");
+  $activated-opacity: mdc-states-opacity($color, activated);
 
   &--activated {
     // Stylelint seems to think that '&' qualifies as a type selector here?
@@ -162,8 +161,7 @@
 // Simple mixin for selected states which automatically selects opacity values based on whether the ink color is
 // light or dark.
 @mixin mdc-states-selected($color, $has-nested-focusable-element: false) {
-  $opacity-map: mdc-states-opacities_($color);
-  $selected-opacity: map-get($opacity-map, "selected");
+  $selected-opacity: mdc-states-opacity($color, selected);
 
   &--selected {
     // stylelint-disable-next-line selector-max-type
@@ -217,6 +215,15 @@
     width: var(--mdc-ripple-fg-size, $radius);
     height: var(--mdc-ripple-fg-size, $radius);
   }
+}
+
+@function mdc-states-opacity($color, $state) {
+  $opacity-map: mdc-states-opacities_($color);
+
+  @if not map-has-key($opacity-map, $state) {
+    @error "Invalid state: '#{$state}'. Choose one of: #{map-keys($opacity-map)}";
+  }
+  @return map-get($opacity-map, $state);
 }
 
 //
